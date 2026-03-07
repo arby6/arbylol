@@ -1,3 +1,12 @@
+<?php
+$userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+
+if (stripos($userAgent, 'curl') !== false) {
+    echo "haiii, you're not getting nothing for now.";
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,8 +89,4 @@ im probably gonna update this in the future as i do more stuff, you contact me a
 </div>
 
 </body>
-
 </html>
-
-
-
