@@ -48,6 +48,26 @@ p {
     opacity: 0.6;
 }
 
+.music-player {
+    margin-top: 25px;
+}
+
+.song {
+    margin: 8px 0;
+}
+
+.song button {
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.song button:hover {
+    opacity: 0.6;
+}
+
 .footer {
     margin-top: 30px;
     font-size: 14px;
@@ -73,12 +93,48 @@ p {
 <p>discord: rby6</p>
 </div>
 
+<div class="music-player">
+<p>music</p>
+
+<div class="song">
+partysover
+<button onclick="playSong('partysover.mp3')">play</button>
+</div>
+
+<div class="song">
+Riot!
+<button onclick="playSong('Riot!.mp3')">play</button>
+</div>
+
+<div class="song">
+CHERRY BOMB
+<button onclick="playSong('CHERRY BOMB.mp3')">play</button>
+</div>
+
+<button onclick="stopSong()">stop</button>
+
+<audio id="audioPlayer"></audio>
+</div>
+
 <div class="footer">
 im probably gonna update this in the future as i do more stuff, you contact me at contact@arby.lol
 </div>
 
 </div>
 
+<script>
+const player = document.getElementById("audioPlayer");
+
+function playSong(song) {
+    player.src = song;
+    player.play();
+}
+
+function stopSong() {
+    player.pause();
+    player.currentTime = 0;
+}
+</script>
+
 </body>
 </html>
-
