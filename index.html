@@ -1,11 +1,9 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>arby's</title>
 
 <style>
@@ -47,15 +45,19 @@ margin-right:auto;
 opacity:0.6;
 }
 
-.music-player{
-margin-top:30px;
-}
-
 .player{
 border:1px solid white;
 padding:20px;
 width:320px;
 margin:auto;
+}
+
+#cover{
+width:200px;
+height:200px;
+object-fit:cover;
+border:1px solid white;
+margin-bottom:10px;
 }
 
 #songTitle{
@@ -65,8 +67,8 @@ font-size:16px;
 
 #time{
 font-size:14px;
-margin-bottom:10px;
 opacity:0.8;
+margin-bottom:10px;
 }
 
 .controls button{
@@ -82,8 +84,6 @@ cursor:pointer;
 opacity:0.6;
 }
 
-/* progress bar */
-
 input[type="range"]{
 -webkit-appearance:none;
 appearance:none;
@@ -98,8 +98,8 @@ input[type="range"]::-webkit-slider-thumb{
 height:12px;
 width:12px;
 background:white;
-cursor:pointer;
 border-radius:50%;
+cursor:pointer;
 }
 
 .volume{
@@ -144,19 +144,19 @@ no i do not need mods in my server, thank you
 </div>
 
 
-<div class="music-player">
-
 <p>music</p>
 
 <div class="player">
 
-<div id="songTitle">song</div>
+<img id="cover">
+
+<div id="songTitle"></div>
 <div id="time">0:00 / 0:00</div>
 
 <div class="controls">
-<button onclick="prevSong()"> < </button>
+<button onclick="prevSong()"><</button>
 <button onclick="togglePlay()" id="playBtn">play</button>
-<button onclick="nextSong()"> > </button>
+<button onclick="nextSong()">></button>
 </div>
 
 <input type="range" id="progress" value="0">
@@ -170,9 +170,6 @@ volume
 
 <audio id="audio"></audio>
 
-</div>
-
-
 <div class="footer">
 im probably gonna update this in the future as i do more stuff,
 you contact me at contact@arby.lol
@@ -183,8 +180,19 @@ you contact me at contact@arby.lol
 <script>
 
 const songs = [
-"Riot!.mp3",
-"CHERRY BOMB.mp3"
+
+{
+title:"Riot!",
+file:"Riot!.mp3",
+cover:"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.lpfreak.com%2Fwp-content%2Fuploads%2F2021%2F08%2FEarl-Sweatshirt-Some-Rap-Songs.jpg"
+},
+
+{
+title:"CHERRY BOMB",
+file:"CHERRY BOMB.mp3",
+cover:"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2F736x%2Fa1%2F42%2F13%2Fa142136e61e3c1ce87ce85ff14b0e4e7.jpg"
+}
+
 ]
 
 let currentSong = 0
@@ -194,41 +202,40 @@ const progress = document.getElementById("progress")
 const volume = document.getElementById("volume")
 const title = document.getElementById("songTitle")
 const time = document.getElementById("time")
+const cover = document.getElementById("cover")
 const playBtn = document.getElementById("playBtn")
 
-function formatTime(seconds){
+function formatTime(sec){
 
-let minutes = Math.floor(seconds / 60)
-let secs = Math.floor(seconds % 60)
+if(isNaN(sec)) return "0:00"
 
-if(secs < 10) secs = "0" + secs
+let m = Math.floor(sec/60)
+let s = Math.floor(sec%60)
 
-return minutes + ":" + secs
+if(s<10) s="0"+s
+
+return m+":"+s
 
 }
 
 function loadSong(){
 
-audio.src = songs[currentSong]
+let song = songs[currentSong]
 
-let cleanName = songs[currentSong].replace(".mp3","")
-
-title.innerText = cleanName
+audio.src = song.file
+title.innerText = song.title
+cover.src = song.cover
 
 }
 
 function togglePlay(){
 
 if(audio.paused){
-
 audio.play()
-playBtn.innerText = "pause"
-
+playBtn.innerText="pause"
 }else{
-
 audio.pause()
-playBtn.innerText = "play"
-
+playBtn.innerText="play"
 }
 
 }
@@ -237,13 +244,11 @@ function nextSong(){
 
 currentSong++
 
-if(currentSong >= songs.length){
-currentSong = 0
-}
+if(currentSong>=songs.length) currentSong=0
 
 loadSong()
 audio.play()
-playBtn.innerText = "pause"
+playBtn.innerText="pause"
 
 }
 
@@ -251,34 +256,32 @@ function prevSong(){
 
 currentSong--
 
-if(currentSong < 0){
-currentSong = songs.length - 1
-}
+if(currentSong<0) currentSong=songs.length-1
 
 loadSong()
 audio.play()
-playBtn.innerText = "pause"
+playBtn.innerText="pause"
 
 }
 
 audio.addEventListener("timeupdate",()=>{
 
-progress.value = (audio.currentTime / audio.duration) * 100
+progress.value=(audio.currentTime/audio.duration)*100
 
-time.innerText =
-formatTime(audio.currentTime) + " / " + formatTime(audio.duration)
+time.innerText=
+formatTime(audio.currentTime)+" / "+formatTime(audio.duration)
 
 })
 
 progress.addEventListener("input",()=>{
 
-audio.currentTime = (progress.value / 100) * audio.duration
+audio.currentTime=(progress.value/100)*audio.duration
 
 })
 
 volume.addEventListener("input",()=>{
 
-audio.volume = volume.value
+audio.volume=volume.value
 
 })
 
@@ -290,4 +293,3 @@ loadSong()
 
 </body>
 </html>
-```
