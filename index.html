@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,14 +53,20 @@ margin-top:30px;
 
 .player{
 border:1px solid white;
-padding:15px;
+padding:20px;
 width:320px;
 margin:auto;
 }
 
 #songTitle{
-margin-bottom:10px;
+margin-bottom:5px;
 font-size:16px;
+}
+
+#time{
+font-size:14px;
+margin-bottom:10px;
+opacity:0.8;
 }
 
 .controls button{
@@ -75,18 +82,29 @@ cursor:pointer;
 opacity:0.6;
 }
 
-#progress{
+/* progress bar */
+
+input[type="range"]{
+-webkit-appearance:none;
+appearance:none;
 width:100%;
-margin-top:10px;
+height:4px;
+background:white;
+outline:none;
+}
+
+input[type="range"]::-webkit-slider-thumb{
+-webkit-appearance:none;
+height:12px;
+width:12px;
+background:white;
+cursor:pointer;
+border-radius:50%;
 }
 
 .volume{
 margin-top:10px;
 font-size:14px;
-}
-
-#volume{
-width:100%;
 }
 
 .footer{
@@ -110,7 +128,7 @@ if you have an actual questions, then ask ahead
 </p>
 
 <p>
-  no i do not need mods in my server, thank you
+no i do not need mods in my server, thank you
 </p>
 
 <div class="links">
@@ -132,13 +150,16 @@ if you have an actual questions, then ask ahead
 
 <div class="player">
 
+<div id="songTitle">song</div>
+<div id="time">0:00 / 0:00</div>
+
 <div class="controls">
-<button onclick="prevSong()"><</button>
+<button onclick="prevSong()"> < </button>
 <button onclick="togglePlay()" id="playBtn">play</button>
-<button onclick="nextSong()">></button>
+<button onclick="nextSong()"> > </button>
 </div>
 
-<input type="range" id="progress" value="0" step="1">
+<input type="range" id="progress" value="0">
 
 <div class="volume">
 volume
@@ -172,21 +193,42 @@ const audio = document.getElementById("audio")
 const progress = document.getElementById("progress")
 const volume = document.getElementById("volume")
 const title = document.getElementById("songTitle")
+const time = document.getElementById("time")
 const playBtn = document.getElementById("playBtn")
 
+function formatTime(seconds){
+
+let minutes = Math.floor(seconds / 60)
+let secs = Math.floor(seconds % 60)
+
+if(secs < 10) secs = "0" + secs
+
+return minutes + ":" + secs
+
+}
+
 function loadSong(){
+
 audio.src = songs[currentSong]
-title.innerText = songs[currentSong]
+
+let cleanName = songs[currentSong].replace(".mp3","")
+
+title.innerText = cleanName
+
 }
 
 function togglePlay(){
 
 if(audio.paused){
+
 audio.play()
-playBtn.innerText="pause"
+playBtn.innerText = "pause"
+
 }else{
+
 audio.pause()
-playBtn.innerText="play"
+playBtn.innerText = "play"
+
 }
 
 }
@@ -201,7 +243,7 @@ currentSong = 0
 
 loadSong()
 audio.play()
-playBtn.innerText="pause"
+playBtn.innerText = "pause"
 
 }
 
@@ -215,13 +257,16 @@ currentSong = songs.length - 1
 
 loadSong()
 audio.play()
-playBtn.innerText="pause"
+playBtn.innerText = "pause"
 
 }
 
 audio.addEventListener("timeupdate",()=>{
 
 progress.value = (audio.currentTime / audio.duration) * 100
+
+time.innerText =
+formatTime(audio.currentTime) + " / " + formatTime(audio.duration)
 
 })
 
@@ -245,5 +290,4 @@ loadSong()
 
 </body>
 </html>
-
-
+```
