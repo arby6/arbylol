@@ -1,78 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>arby's</title>
 
 <style>
-body {
-    background: #000;
-    color: #fff;
-    font-family: Arial, Helvetica, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+
+body{
+background:#000;
+color:#fff;
+font-family:Arial, Helvetica, sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
 }
 
-.container {
-    max-width: 600px;
-    text-align: center;
+.container{
+max-width:600px;
+text-align:center;
 }
 
-h1 {
-    font-size: 40px;
-    margin-bottom: 10px;
+p{
+font-size:18px;
+margin-bottom:20px;
 }
 
-p {
-    font-size: 18px;
-    margin-bottom: 25px;
+.links a{
+display:block;
+margin:10px 0;
+color:white;
+text-decoration:none;
+border-bottom:1px solid white;
+padding-bottom:4px;
+width:fit-content;
+margin-left:auto;
+margin-right:auto;
 }
 
-.links a {
-    display: block;
-    margin: 10px 0;
-    color: white;
-    text-decoration: none;
-    border-bottom: 1px solid white;
-    padding-bottom: 4px;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
+.links a:hover{
+opacity:0.6;
 }
 
-.links a:hover {
-    opacity: 0.6;
+.music-player{
+margin-top:30px;
 }
 
-.music-player {
-    margin-top: 25px;
+.player{
+border:1px solid white;
+padding:15px;
+width:320px;
+margin:auto;
 }
 
-.song {
-    margin: 8px 0;
+#songTitle{
+margin-bottom:10px;
+font-size:16px;
 }
 
-.song button {
-    background: transparent;
-    border: 1px solid white;
-    color: white;
-    padding: 6px 12px;
-    cursor: pointer;
+.controls button{
+background:black;
+color:white;
+border:1px solid white;
+padding:6px 12px;
+margin:4px;
+cursor:pointer;
 }
 
-.song button:hover {
-    opacity: 0.6;
+.controls button:hover{
+opacity:0.6;
 }
 
-.footer {
-    margin-top: 30px;
-    font-size: 14px;
-    opacity: 0.7;
+#progress{
+width:100%;
+margin-top:10px;
 }
+
+.volume{
+margin-top:10px;
+font-size:14px;
+}
+
+#volume{
+width:100%;
+}
+
+.footer{
+margin-top:30px;
+font-size:14px;
+opacity:0.7;
+}
+
 </style>
 </head>
 
@@ -81,59 +103,149 @@ p {
 <div class="container">
 
 <p>im arby, i code, i also have social media</p>
-<p>if you add me and start talking some nonsense, i will block you and ignore you, if you have an actual questions, then ask ahead</p>
-<p>no i do not need no mods in my discord server, thank you</p>
+
+<p>
+if you add me and start talking some nonsense, i will block you and ignore you,
+if you have an actual questions, then ask ahead
+</p>
+
+<p>
+no i do not need no mods in my discord server, thank you
+</p>
 
 <div class="links">
+
 <a href="https://github.com/arby6">github</a>
 <a href="https://www.youtube.com/@rby6">youtube</a>
 <a href="https://www.tiktok.com/@rbysix">tiktok</a>
 <a href="https://open.spotify.com/user/31a2cqgsyp7sqjih26jp4pq7pmie">spotify</a>
 <a href="https://discord.gg/Arg2byeZUY">discord server</a>
+
 <p>discord: rby6</p>
+
 </div>
+
+<!-- MUSIC PLAYER -->
 
 <div class="music-player">
+
 <p>music</p>
 
-<div class="song">
-partysover
-<button onclick="playSong('partysover.mp3')">play</button>
+<div class="player">
+
+<div id="songTitle">partysover.mp3</div>
+
+<div class="controls">
+<button onclick="prevSong()">◀</button>
+<button onclick="togglePlay()" id="playBtn">play</button>
+<button onclick="nextSong()">▶</button>
 </div>
 
-<div class="song">
-Riot!
-<button onclick="playSong('Riot!.mp3')">play</button>
+<input type="range" id="progress" value="0" step="1">
+
+<div class="volume">
+volume
+<input type="range" id="volume" min="0" max="1" step="0.01" value="1">
 </div>
 
-<div class="song">
-CHERRY BOMB
-<button onclick="playSong('CHERRY BOMB.mp3')">play</button>
 </div>
 
-<button onclick="stopSong()">stop</button>
+<audio id="audio"></audio>
 
-<audio id="audioPlayer"></audio>
 </div>
+
+<!-- FOOTER -->
 
 <div class="footer">
-im probably gonna update this in the future as i do more stuff, you contact me at contact@arby.lol
+im probably gonna update this in the future as i do more stuff,
+you contact me at contact@arby.lol
 </div>
 
 </div>
 
 <script>
-const player = document.getElementById("audioPlayer");
 
-function playSong(song) {
-    player.src = song;
-    player.play();
+const songs = [
+"partysover.mp3",
+"Riot!.mp3",
+"CHERRY BOMB.mp3"
+]
+
+let currentSong = 0
+
+const audio = document.getElementById("audio")
+const progress = document.getElementById("progress")
+const volume = document.getElementById("volume")
+const title = document.getElementById("songTitle")
+const playBtn = document.getElementById("playBtn")
+
+function loadSong(){
+audio.src = songs[currentSong]
+title.innerText = songs[currentSong]
 }
 
-function stopSong() {
-    player.pause();
-    player.currentTime = 0;
+function togglePlay(){
+
+if(audio.paused){
+audio.play()
+playBtn.innerText="pause"
+}else{
+audio.pause()
+playBtn.innerText="play"
 }
+
+}
+
+function nextSong(){
+
+currentSong++
+
+if(currentSong >= songs.length){
+currentSong = 0
+}
+
+loadSong()
+audio.play()
+playBtn.innerText="pause"
+
+}
+
+function prevSong(){
+
+currentSong--
+
+if(currentSong < 0){
+currentSong = songs.length - 1
+}
+
+loadSong()
+audio.play()
+playBtn.innerText="pause"
+
+}
+
+audio.addEventListener("timeupdate",()=>{
+
+progress.value = (audio.currentTime / audio.duration) * 100
+
+})
+
+progress.addEventListener("input",()=>{
+
+audio.currentTime = (progress.value / 100) * audio.duration
+
+})
+
+volume.addEventListener("input",()=>{
+
+audio.volume = volume.value
+
+})
+
+audio.addEventListener("ended",nextSong)
+
+loadSong()
+
 </script>
 
 </body>
